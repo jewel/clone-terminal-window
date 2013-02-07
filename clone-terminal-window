@@ -1,0 +1,38 @@
+#!/usr/bin/ruby
+# Clone a gnome-terminal window.  This will attempt to connect to the same
+# directory, connect to the same remote host, and run sudo if necessary.
+
+require 'shellwords'
+
+def se arg
+  Shellwords.shellescape arg
+end
+
+title = `xdotool getactivewindow getwindowname`.chomp
+title = ARGV.first if ARGV.first
+
+case title
+when /^(.*)@(.*): (.*)$/
+  user = $1
+  host = $2
+  dir = $3
+when /^.* \((.*)\) - VIM$/
+  dir = $1
+else
+  $stderr.puts "Invalid terminal title: #{title.inspect}"
+  system "gnome-terminal"
+  exit 1
+end
+
+dir = File.expand_path dir
+
+command = %{cd #{se dir}; bash --login}
+command = "bash -c #{se command}"
+command = "sudo #{command}" if user == 'root'
+
+if host == `hostname`.chomp
+  command = "ssh -t #{se host} #{se command}"
+end
+
+$stderr.puts "Launching #{command}"
+system "gnome-terminal -e #{se command}"
