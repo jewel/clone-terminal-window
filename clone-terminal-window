@@ -30,7 +30,7 @@ command = %{cd #{se dir}; bash --login}
 command = "bash -c #{se command}"
 command = "sudo #{command}" if user == 'root'
 
-if host == `hostname`.chomp
+if host != `hostname`.chomp
   command = "ssh -t #{se host} #{se command}"
 end
 
