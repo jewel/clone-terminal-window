@@ -10,7 +10,8 @@ restore as much of the state as possible:
 
 It gleans all of this state from the root window.
 
-Requirements
+Installation
 ------------
-ruby
-xdotool (available in apt)
+
+Install ruby and xdotool (both available in apt).  Create a hotkey in your
+window manager that will run this script (I'm using CTRL-SHIFT-T.)
